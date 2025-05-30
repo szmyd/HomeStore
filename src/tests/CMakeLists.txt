@@ -18,7 +18,7 @@ if (${build_nonio_tests})
     add_test(NAME BlkAlloc COMMAND test_blkalloc)
 
     add_executable(test_blk_cache_queue)
-    target_sources(test_blk_cache_queue PRIVATE test_blk_cache_queue.cpp ../lib/blkalloc/blk_cache_queue.cpp)
+    target_sources(test_blk_cache_queue PRIVATE test_blk_cache_queue.cpp $<TARGET_OBJECTS:hs_blkalloc>)
     target_link_libraries(test_blk_cache_queue homestore ${COMMON_TEST_DEPS} )
     add_test(NAME BlkCacheQueue COMMAND test_blk_cache_queue)
 
@@ -39,7 +39,7 @@ if (${build_nonio_tests})
     set_tests_properties(MemBtree PROPERTIES TIMEOUT 1200)
 
     add_executable(test_blk_read_tracker)
-    target_sources(test_blk_read_tracker PRIVATE test_blk_read_tracker.cpp ../lib/blkdata_svc/blk_read_tracker.cpp ../lib/blkalloc/blk.cpp)
+    target_sources(test_blk_read_tracker PRIVATE test_blk_read_tracker.cpp $<TARGET_OBJECTS:hs_datasvc> $<TARGET_OBJECTS:hs_blkalloc>)
     target_link_libraries(test_blk_read_tracker ${COMMON_TEST_DEPS} GTest::gtest)
     add_test(NAME BlkReadTracker COMMAND test_blk_read_tracker)
 
@@ -59,7 +59,7 @@ if (${build_nonio_tests})
     add_test(NAME AppendBlkAlloc COMMAND test_append_blk_allocator)
     set_property(TEST AppendBlkAlloc PROPERTY ENVIRONMENT "ASAN_OPTIONS=detect_stack_use_after_return=true")
 
-    set(TEST_BLKID_SOURCES test_blkid.cpp ../lib/blkalloc/blk.cpp)
+    set(TEST_BLKID_SOURCES test_blkid.cpp $<TARGET_OBJECTS:hs_blkalloc>)
     add_executable(test_blkid ${TEST_BLKID_SOURCES})
     target_link_libraries(test_blkid ${COMMON_TEST_DEPS} GTest::gtest)
     add_test(NAME TestBlkid COMMAND test_blkid)
